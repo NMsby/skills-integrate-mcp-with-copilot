@@ -90,26 +90,43 @@ document.addEventListener("DOMContentLoaded", () => {
               ${details.participants
                 .map(
                   (email) =>
-                    `<li><span class="participant-email">${email}</span><button class="delete-btn" data-activity="${name}" data-email="${email}">❌</button></li>`
+                    `<li><span class="participant-email">${email}</span><button class="delete-btn" data-activity="${name}" data-email="${email}" aria-label="Remove participant">❌</button></li>`
                 )
                 .join("")}
             </ul>
           </div>`
           : `<p><em>No participants yet</em></p>`;
 
-      activityCard.innerHTML = `
-        <h4>${name}</h4>
-        <p>${details.description}</p>
-        <p><strong>Schedule:</strong> ${details.schedule}</p>
-        <p><strong>Availability:</strong> ${spotsLeft} spots left</p>
-        <div class="participants-container">
-          ${participantsHTML}
-        </div>
-      `;
+      const nameElement = document.createElement("h4");
+      nameElement.textContent = name;
+
+      const descriptionElement = document.createElement("p");
+      descriptionElement.textContent = details.description;
+
+      const scheduleElement = document.createElement("p");
+      scheduleElement.innerHTML = `<strong>Schedule:</strong> ${details.schedule}`;
+
+      const availabilityElement = document.createElement("p");
+      availabilityElement.innerHTML = `<strong>Availability:</strong> ${spotsLeft} spots left`;
+
+      const participantsContainer = document.createElement("div");
+      participantsContainer.className = "participants-container";
+      participantsContainer.innerHTML = participantsHTML;
+
+      activityCard.appendChild(nameElement);
+      activityCard.appendChild(descriptionElement);
+      activityCard.appendChild(scheduleElement);
+      activityCard.appendChild(availabilityElement);
+      activityCard.appendChild(participantsContainer);
 
       activitiesList.appendChild(activityCard);
+    });
 
-      // Add option to select dropdown
+    // Clear existing options in the select dropdown
+    activitySelect.innerHTML = '';
+
+    // Add options to select dropdown
+    filtered.forEach(([name]) => {
       const option = document.createElement("option");
       option.value = name;
       option.textContent = name;
